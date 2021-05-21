@@ -2,7 +2,9 @@ import sqlite3
 from flask import Flask, request, session, g, redirect, render_template
 
 
-
+#############
+# Using g to handle request
+# #################
 
 app = Flask(__name__, template_folder='templates')
 
@@ -12,29 +14,9 @@ def connect_db():
     con = sqlite3.connect('homework.db', check_same_thread=False)
 
     cur = con.cursor()
-    cur.execute("DROP TABLE IF EXISTS students;")
-    cur.execute("DROP TABLE IF EXISTS quizzes;")
-    cur.execute("DROP TABLE IF EXISTS results;")
-
-    cur.execute("CREATE TABLE students (id INTEGER PRIMARY KEY, first_name TEXT, last_name TEXT);")
-    cur.execute("CREATE TABLE quizzes (id INTEGER PRIMARY KEY, quiz_subject TEXT, num_questions INTEGER, quiz_date DATE);")
-    cur.execute("CREATE TABLE results (id INTEGER PRIMARY KEY, student_id INTEGER, quiz_id INTEGER, score INTEGER);")
-
-    cur.execute("INSERT INTO students VALUES (1, 'King', 'Bach');")
-    cur.execute("INSERT INTO students VALUES (2, 'Serena', 'Williams');")
-    cur.execute("INSERT INTO students VALUES (3, 'Stephy', 'Graft');")
-    cur.execute("INSERT INTO students VALUES (4, 'Terron', 'Johnson');")
-    cur.execute("INSERT INTO students VALUES (5, 'Jack', 'Black');")
-    cur.execute("INSERT INTO students VALUES (6, 'Wu', 'Tang');")
-
-    cur.execute("INSERT INTO quizzes (quiz_subject, num_questions, quiz_date) VALUES ('Intro to Algorithims', 19, '2021-05-05');")
-    cur.execute("INSERT INTO results (quiz_id, student_id, score) VALUES (1, 1, 85);")
-    cur.execute("INSERT INTO results (quiz_id, student_id,  score) VALUES (1, 2, 85);")
-    cur.execute("INSERT INTO results (quiz_id, student_id, score) VALUES (1, 3, 85);")
-    cur.execute("INSERT INTO results (quiz_id, student_id, score) VALUES (1, 4, 85);")
-    cur.execute("INSERT INTO results (quiz_id, student_id, score) VALUES (1, 5, 85);")
-    cur.execute("INSERT INTO results (quiz_id, student_id, score) VALUES (1, 6, 85);")
-    con.close
+    cur.execute("CREATE TABLE if not exists students (id INTEGER PRIMARY KEY, first_name TEXT, last_name TEXT);")
+    cur.execute("CREATE TABLE if not exists  quizzes (id INTEGER PRIMARY KEY, quiz_subject TEXT, num_questions INTEGER, quiz_date DATE, student_id integer, grade integer);")
+    cur.execute("CREATE TABLE if not exists  results (id INTEGER PRIMARY KEY, student_id INTEGER, quiz_id INTEGER, score INTEGER);")
     return con
 
 @app.teardown_appcontext
@@ -74,6 +56,22 @@ def dashboard():
 
         student_res = student_quuery.fetchall()
         quiz_res = quiz_query.fetchall()
+        # if len(student_res) < 1 or len(quiz_res) < 1:
+        #         g.db.execute("INSERT INTO students VALUES (1, 'King', 'Bach');")
+        #         g.db.execute("INSERT INTO students VALUES (2, 'Serena', 'Williams');")
+        #         g.db.execute("INSERT INTO students VALUES (3, 'Stephy', 'Graft');")
+        #         g.db.execute("INSERT INTO students VALUES (4, 'Terron', 'Johnson');")
+        #         g.db.execute("INSERT INTO students VALUES (5, 'Jack', 'Black');")
+        #         g.db.execute("INSERT INTO students VALUES (6, 'Wu', 'Tang');")
+
+        #         g.db.execute("INSERT INTO quizzes (quiz_subject, num_questions, quiz_date) VALUES ('Intro to Algorithims', 19, '2021-05-05');")
+        #         g.db.execute("INSERT INTO results (quiz_id, student_id, score) VALUES (1, 1, 85);")
+        #         g.db.execute("INSERT INTO results (quiz_id, student_id,  score) VALUES (1, 2, 85);")
+        #         g.db.execute("INSERT INTO results (quiz_id, student_id, score) VALUES (1, 3, 85);")
+        #         g.db.execute("INSERT INTO results (quiz_id, student_id, score) VALUES (1, 4, 85);")
+        #         g.db.execute("INSERT INTO results (quiz_id, student_id, score) VALUES (1, 5, 85);")
+        #         g.db.execute("INSERT INTO results (quiz_id, student_id, score) VALUES (1, 6, 85);")
+            
 
         s  = []
         q = []

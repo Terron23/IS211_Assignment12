@@ -7,13 +7,20 @@
 
     <body>
 
-    <h1>Add Quiz</h1>
+    <h1>Add A Quiz</h1>
 
     <form action="/quiz/add" method="POST">
-        <input type="text" name="quiz_subject">Quiz Subject</input>
-        <input type="text" name="num_questions"># of Questions</input>
-        <input type="text" name="q_date">Date Taken</input>
-        <input type="submit" value="Add Quiz">
+        <label>Quiz Subject</label><br />
+        <input type="text" name="quiz_subject" /><br /><br />
+        <label># of Questions</label><br />
+        <input type="number" name="num_questions" /><br /><br />
+        <label>Date Taken</label><br />
+        <input type="datetime-local" name="q_date" /><br /><br />
+        <label>Student ID</label><br />
+        <input type="number" name="student_id" /><br /><br />
+        <label>Grade</label><br />
+        <input type="number" name="student_grade" /><br /><br />
+        <input type="submit" value="Add Quiz" />
     </form>
 
     </body>

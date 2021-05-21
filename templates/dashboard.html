@@ -15,7 +15,7 @@
             </tr>
             {% for s in students %}
             <tr>
-                <td>{{ s.student_id }}</td><td>{{ s.f_name }}</td><td>{{ s.l_name }}</td><td> <a href='/student{{s.student_id}}'>See Student Results</a></td>
+                <td>{{ s.student_id }}</td><td>{{ s.f_name }}</td><td>{{ s.l_name }}</td><td> <a href='/student/{{s.id}}'>See Student Results</a></td>
             </tr>
             {% endfor %}
         </table>
