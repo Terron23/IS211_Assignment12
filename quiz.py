@@ -51,10 +51,10 @@ def dashboard():
         q = []
 
         for i in student_res:
-            s.append({"s_id":i[0], "f_name": i[2], "l_name":i[3]})
+            s.append({"student_id":i[0], "f_name": i[2], "l_name":i[3]})
 
         for i in quiz_res:
-            s.append({"q_id":i[0], "sub": i[2], "num_que":i[2], "date":i[3]})
+            s.append({"quiz_id":i[0], "sub": i[2], "num_que":i[2], "date":i[3]})
 
         return render_template('dashboard.html', students=s, quizzes=q)
     else:
@@ -78,10 +78,10 @@ def add_student():
 @app.route('/student/<id>')
 def get_results(id):
 
-    cur = g.db.execute("SELECT * FROM students JOIN results ON students.s_id = results.s_id JOIN quizzes ON results.q_id = quizzes.q_id WHERE students.s_id = ?",[id])
+    cur = g.db.execute("SELECT * FROM students JOIN results ON students.student_id = results.student_id JOIN quizzes ON results.quiz_id = quizzes.quiz_id WHERE students.student_id = ?",[id])
     res = cur.fetchall()
 
-    results = [dict(q_id=r[0], score=r[1], q_date=r[2],q_subject=r[3]) for r in res]
+    results = [dict(quiz_id=r[0], score=r[1], q_date=r[2],quiz_subject=r[3]) for r in res]
 
     return render_template('student_results.html', results=results)
 
@@ -90,18 +90,18 @@ def add_results():
     if session['username']=='admin':
         try:
             if request.method == 'GET':
-                cur = g.db.execute("SELECT first_name,s_id FROM students")
+                cur = g.db.execute("SELECT first_name,student_id FROM students")
                 res = cur.fetchall()
-                students = [dict(first_name=r[0],s_id=r[1]) for r in res]
+                students = [dict(first_name=r[0],student_id=r[1]) for r in res]
 
-                cur2 = g.db.execute("SELECT q_id FROM quizzes")
+                cur2 = g.db.execute("SELECT quiz_id FROM quizzes")
                 res2 = cur2.fetchall()
-                quizzes = [dict(q_id=r[0]) for r in res2]
+                quizzes = [dict(quiz_id=r[0]) for r in res2]
 
                 return render_template('add_results.html', students=students,quizzes=quizzes)
 
             elif request.method == 'POST':
-                g.db.execute("INSERT into results (s_id,q_id,score) values (?,?,?)", [request.form['student'],request.form['quiz'],request.form['score']])
+                g.db.execute("INSERT into results (student_id,quiz_id,score) values (?,?,?)", [request.form['student'],request.form['quiz'],request.form['score']])
                 g.db.commit()
                 return redirect('/dashboard')
 
@@ -116,7 +116,7 @@ def add_quiz():
             return render_template('add_quiz.html')
         elif request.method == 'POST':
             try:
-                g.db.execute("INSERT into quizzes (q_subject,num_questions,q_date) values (?,?,?)", [request.form['q_subject'], request.form['num_questions'], request.form['q_date']])
+                g.db.execute("INSERT into quizzes (quiz_subject,num_questions,q_date) values (?,?,?)", [request.form['quiz_subject'], request.form['num_questions'], request.form['q_date']])
                 g.db.commit()
                 return redirect('/dashboard')
             except Exception as e:

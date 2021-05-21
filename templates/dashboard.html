@@ -15,7 +15,7 @@
             </tr>
             {% for s in students %}
             <tr>
-                <td>{{ s.s_id }}</td><td>{{ s.f_name }}</td><td>{{ s.l_name }}</td><td> <a href='/student{{s.s_id}}'>See Student Results</a></td>
+                <td>{{ s.student_id }}</td><td>{{ s.f_name }}</td><td>{{ s.l_name }}</td><td> <a href='/student{{s.student_id}}'>See Student Results</a></td>
             </tr>
             {% endfor %}
         </table>
@@ -27,7 +27,7 @@
             </tr>
             {% for q in quizzes %}
             <tr>
-                <td>{{ q.q_id }}</td><td>{{ q.sub }}</td><td>{{ q.num_que }}</td><td>{{ q.date }}</td>
+                <td>{{ q.quiz_id }}</td><td>{{ q.sub }}</td><td>{{ q.num_que }}</td><td>{{ q.date }}</td>
             </tr>
             {% endfor %}
         </table>
