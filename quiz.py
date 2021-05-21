@@ -1,13 +1,41 @@
 import sqlite3
-from flask import Flask, request, session, g, redirect, url_for, render_template, flask
-import datetime
-app = Flask(__name__)
+from flask import Flask, request, session, g, redirect, render_template
 
+
+
+
+app = Flask(__name__, template_folder='templates')
+
+app.config['SECRET_KEY'] = 'the random string' 
 
 def connect_db():
-    db = sqlite3.connect('homework.db')
-    db.row_factory = sqlite3.Row
-    return db
+    con = sqlite3.connect('homework.db', check_same_thread=False)
+
+    cur = con.cursor()
+    cur.execute("DROP TABLE IF EXISTS students;")
+    cur.execute("DROP TABLE IF EXISTS quizzes;")
+    cur.execute("DROP TABLE IF EXISTS results;")
+
+    cur.execute("CREATE TABLE students (id INTEGER PRIMARY KEY, first_name TEXT, last_name TEXT);")
+    cur.execute("CREATE TABLE quizzes (id INTEGER PRIMARY KEY, quiz_subject TEXT, num_questions INTEGER, quiz_date DATE);")
+    cur.execute("CREATE TABLE results (id INTEGER PRIMARY KEY, student_id INTEGER, quiz_id INTEGER, score INTEGER);")
+
+    cur.execute("INSERT INTO students VALUES (1, 'King', 'Bach');")
+    cur.execute("INSERT INTO students VALUES (2, 'Serena', 'Williams');")
+    cur.execute("INSERT INTO students VALUES (3, 'Stephy', 'Graft');")
+    cur.execute("INSERT INTO students VALUES (4, 'Terron', 'Johnson');")
+    cur.execute("INSERT INTO students VALUES (5, 'Jack', 'Black');")
+    cur.execute("INSERT INTO students VALUES (6, 'Wu', 'Tang');")
+
+    cur.execute("INSERT INTO quizzes (quiz_subject, num_questions, quiz_date) VALUES ('Intro to Algorithims', 19, '2021-05-05');")
+    cur.execute("INSERT INTO results (quiz_id, student_id, score) VALUES (1, 1, 85);")
+    cur.execute("INSERT INTO results (quiz_id, student_id,  score) VALUES (1, 2, 85);")
+    cur.execute("INSERT INTO results (quiz_id, student_id, score) VALUES (1, 3, 85);")
+    cur.execute("INSERT INTO results (quiz_id, student_id, score) VALUES (1, 4, 85);")
+    cur.execute("INSERT INTO results (quiz_id, student_id, score) VALUES (1, 5, 85);")
+    cur.execute("INSERT INTO results (quiz_id, student_id, score) VALUES (1, 6, 85);")
+    con.close
+    return con
 
 @app.teardown_appcontext
 def close_db(Exception):
@@ -51,7 +79,7 @@ def dashboard():
         q = []
 
         for i in student_res:
-            s.append({"student_id":i[0], "f_name": i[2], "l_name":i[3]})
+            s.append({"student_id":i[0], "f_name": i[1], "l_name":i[2]})
 
         for i in quiz_res:
             s.append({"quiz_id":i[0], "sub": i[2], "num_que":i[2], "date":i[3]})
@@ -127,4 +155,4 @@ def add_quiz():
 
 if __name__=='__main__':
     app.debug = True
-    app.run(host = '0.0.0.0', port=5000)
+    app.run(host = '0.0.0.0', port=5001)
