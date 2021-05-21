@@ -12,7 +12,7 @@ with con:
 
     cur.execute("CREATE TABLE students (id INTEGER PRIMARY KEY, first_name TEXT, last_name TEXT);")
     cur.execute("CREATE TABLE quizzes (id INTEGER PRIMARY KEY, q_subject TEXT, num_questions INTEGER, q_date DATE);")
-    cur.execute("CREATE TABLE results (id INTEGER, s_id INTEGER, q_id INTEGER, score INTEGER);")
+    cur.execute("CREATE TABLE results (id INTEGER, student_id INTEGER, q_id INTEGER, score INTEGER);")
 
     cur.execute("INSERT INTO students VALUES ('John', 'Smith');")
     cur.execute("INSERT INTO quizzes (q_subject, num_questions, q_date) VALUES (1, 'Python Basics', 5, '2015-05-05');")
