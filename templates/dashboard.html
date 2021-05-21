@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title></title>
+    <title>Dashboard</title>
+
+</head>
+    <body>
+
+        <table>
+            <h1>Students</h1>
+            <tr>
+                <th>ID</th><th>First Name</th><th>Last Name</th>
+            </tr>
+            {% for s in students %}
+            <tr>
+                <td>{{ s.s_id }}</td><td>{{ s.f_name }}</td><td>{{ s.l_name }}</td><td> <a href='/student{{s.s_id}}'>See Student Results</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <table>
+            <h1>Quizzes</h1>
+            <tr>
+                <th>ID</th><th>Subject</th><th># of questions</th><th>Date</th>
+            </tr>
+            {% for q in quizzes %}
+            <tr>
+                <td>{{ q.q_id }}</td><td>{{ q.sub }}</td><td>{{ q.num_que }}</td><td>{{ q.date }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+<br>
+    <a href='/student/add'>Add Student</a><br>
+    <a href='/quiz/add'>Add Quiz</a><br>
+    <a href='/results/add'>Add Quiz Results</a><br>
+
+    </body>
+</html>
