@@ -15,7 +15,7 @@ def connect_db():
 
     cur = con.cursor()
     cur.execute("CREATE TABLE if not exists students (id INTEGER PRIMARY KEY, first_name TEXT, last_name TEXT);")
-    cur.execute("CREATE TABLE if not exists  quizzes (id INTEGER PRIMARY KEY, quiz_subject TEXT, num_questions INTEGER, quiz_date DATE, student_id integer, grade integer);")
+    cur.execute("CREATE TABLE if not exists  quizzes (id INTEGER PRIMARY KEY, quiz_subject TEXT, num_questions INTEGER, quiz_date DATE);")
     cur.execute("CREATE TABLE if not exists  results (id INTEGER PRIMARY KEY, student_id INTEGER, quiz_id INTEGER, score INTEGER);")
     return con
 
@@ -81,7 +81,7 @@ def dashboard():
 
         for i in quiz_res:
             s.append({"quiz_id":i[0], "sub": i[2], "num_que":i[2], "date":i[3]})
-
+        print(q)
         return render_template('dashboard.html', students=s, quizzes=q)
     else:
         return redirect('/login')
@@ -104,7 +104,7 @@ def add_student():
 @app.route('/student/<id>')
 def get_results(id):
 
-    cur = g.db.execute("SELECT * FROM students JOIN results ON students.student_id = results.student_id JOIN quizzes ON results.quiz_id = quizzes.quiz_id WHERE students.student_id = ?",[id])
+    cur = g.db.execute("SELECT * FROM students JOIN results ON students.id = results.student_id JOIN quizzes ON results.quiz_id = quizzes.id WHERE students.id = ?",[id])
     res = cur.fetchall()
 
     results = [dict(quiz_id=r[0], score=r[1], q_date=r[2],quiz_subject=r[3]) for r in res]
@@ -116,11 +116,11 @@ def add_results():
     if session['username']=='admin':
         try:
             if request.method == 'GET':
-                cur = g.db.execute("SELECT first_name,student_id FROM students")
+                cur = g.db.execute("SELECT first_name,id FROM students")
                 res = cur.fetchall()
                 students = [dict(first_name=r[0],student_id=r[1]) for r in res]
 
-                cur2 = g.db.execute("SELECT quiz_id FROM quizzes")
+                cur2 = g.db.execute("SELECT id FROM quizzes")
                 res2 = cur2.fetchall()
                 quizzes = [dict(quiz_id=r[0]) for r in res2]
 
@@ -141,13 +141,10 @@ def add_quiz():
         if request.method == 'GET':
             return render_template('add_quiz.html')
         elif request.method == 'POST':
-            try:
-                g.db.execute("INSERT into quizzes (quiz_subject,num_questions,q_date) values (?,?,?)", [request.form['quiz_subject'], request.form['num_questions'], request.form['q_date']])
+                g.db.execute("INSERT into quizzes (quiz_subject,num_questions,quiz_date) values (?,?,?)", [request.form['quiz_subject'], request.form['num_questions'], request.form['quiz_date']])
                 g.db.commit()
                 return redirect('/dashboard')
-            except Exception as e:
-                print(e)
-                return render_template('add_quiz.html')
+         
     else:
         return redirect('/login')
 
